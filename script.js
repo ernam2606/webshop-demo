@@ -77,11 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const itemDiv = document.createElement("div");
         itemDiv.className = "cart-item";
         itemDiv.innerHTML =
-          `<div class="item-info">
-            <img src="${item.image}" alt="${item.name}" class="cart-thumb">
-            <span>${item.name} - ${item.price.toFixed(2)} €</span>
-          </div>
-          <button class="remove-item" data-index="${index}">×</button>`;
+          itemDiv.innerHTML =
+        '<div class="item-info">' +
+            '<img src="' + item.image + '" alt="' + item.name + '" class="cart-thumb">' +
+            '<span>' + item.name + ' - ' + item.price.toFixed(2) + ' €</span>' +
+        '</div>' +
+        '<button class="remove-item" data-index="' + index + '">×</button>';
+
         cartContainer.appendChild(itemDiv);
       });
 
@@ -215,40 +217,57 @@ Ukupno: ${total.toFixed(2)} €`;
       return;
     }
     emailjs.send("service_eu0z18p", "template_4qa1fac", {
-      email: email,
-      coupon_code: "WELCOME10"
-    }, "sgH_wGapGLRAusYRL")
-      .then(() => {
-        responseElem.style.display = "block";
-        responseElem.style.color = "green";
-        responseElem.innerText = "Hvala na prijavi! Kupon: WELCOME10";
-      })
-      .catch((error) => {
-        console.error("Greška pri slanju:", error);
-        responseElem.style.color = "#d9534f";
-        responseElem.innerText = "Došlo je do greške. Pokušajte ponovno.";
-      });
+  email: email,
+  coupon_code: "WELCOME10"
+}, "sgH_wGapGLRAusYRL")
+  .then(() => {
+    // ✅ Poruka kupcu uspješno poslana
+    responseElem.style.display = "block";
+    responseElem.style.color = "green";
+    responseElem.innerText = "Hvala na prijavi! Kupon: WELCOME10";
+
+    // ✅ Dodatno: pošalji meni kao vlasnici obavijest
+    emailjs.send("service_eu0z18p", "template_l6fgv8h", {
+      user_email: email,
+      prijavljeno_datum: new Date().toLocaleString("hr-HR")
+    }, "sgH_wGapGLRAusYRL");
+  })
+  .catch((error) => {
+    console.error("Greška pri slanju:", error);
+    responseElem.style.color = "#d9534f";
+    responseElem.innerText = "Došlo je do greške. Pokušajte ponovno.";
+  });
   }
 
+  if (openBtn) {
   openBtn.onclick = () => modal.style.display = "flex";
+}
+if (closeBtn) {
   closeBtn.onclick = () => {
     modal.style.display = "none";
     responseMsg.innerText = "";
     responseMsg.style.display = "none";
     emailInput.value = "";
   };
+}
+if (closePopupModalBtn) {
   closePopupModalBtn.onclick = () => {
     popupModal.style.display = "none";
     popupResponseMsg.innerText = "";
     popupResponseMsg.style.display = "none";
     popupEmailInput.value = "";
   };
+}
+if (submitBtn) {
   submitBtn.onclick = () => {
     handleNewsletterSubmit(emailInput, responseMsg, modal);
   };
+}
+if (popupSubmitBtn) {
   popupSubmitBtn.onclick = () => {
     handleNewsletterSubmit(popupEmailInput, popupResponseMsg, popupModal);
   };
+}
 
   window.onclick = (e) => {
     if (e.target === modal) modal.style.display = "none";
@@ -275,41 +294,98 @@ Ukupno: ${total.toFixed(2)} €`;
     });
   }
 
-
   // Delivery info
   const deliveryDate = document.getElementById("deliveryDate");
   const deliveryInfo = document.getElementById("deliveryInfo");
   const langBtn = document.getElementById("langBtn");
   const naslov = document.getElementById("naslov");
 
-  if (langBtn && naslov) {
-    langBtn.addEventListener("click", () => {
-      isENG = langBtn.innerText === "ENG";
-      langBtn.innerText = isENG ? "HR" : "ENG";
-      naslov.innerText = isENG ? "Welcome to Demo Shop" : "Dobrodošli u Demo Shop";
-      document.querySelector("#newsletter .section-title").innerText = "Newsletter";
-      document.querySelector("#newsletterBtn").innerText = isENG ? "Subscribe to Newsletter" : "Prijavi se na newsletter";
-      document.querySelector("#color-section .section-title").innerText = isENG ? "Customize Your Image" : "Prilagodite svoju sliku";
-      document.querySelector("label[for='colorPicker']").innerText = isENG ? "Choose background color:" : "Odaberite boju pozadine:";
-      document.querySelector("#delivery .section-title").innerText = isENG ? "Choose delivery date" : "Odaberite datum isporuke";
-      document.querySelector("#proizvodi .section-title").innerText = isENG ? "Our Products" : "Naši proizvodi";
+  if (langBtn) {
+  langBtn.addEventListener("click", () => {
+    isENG = !isENG;
+    langBtn.innerText = isENG ? "HR" : "ENG";
 
-      const proizvodi = document.querySelectorAll(".product");
-      proizvodi.forEach((el, i) => {
-        const naziv = ["Poster A", "Poster B", "Poster C"];
-        const opisi = isENG
-          ? ["Caricature poster", "Family tree poster", "Star map poster"]
-          : ["Poster karikature", "Poster obiteljskog stabla", "Poster zvjezdane mape"];
-        el.querySelector("h3").innerText = naziv[i];
-        el.querySelectorAll("p")[0].innerText = opisi[i];
-        el.querySelector("button").innerText = isENG ? "Add to Cart" : "Dodaj u košaricu";
+    // ==================== INDEX.html ====================
+    const naslov = document.getElementById("naslov");
+    if (naslov) {
+      // Provjeri po sadržaju koja je stranica
+      if (window.location.pathname.includes("index.html")) {
+        naslov.innerText = isENG ? "Welcome to Demo Shop" : "Dobrodošli u Demo Shop";
+      } else if (window.location.pathname.includes("kosarica.html")) {
+        naslov.innerText = isENG ? "Your Cart" : "Tvoja košarica";
+      }
+    }
+
+    const newsletterTitle = document.querySelector("#newsletter .section-title");
+    if (newsletterTitle) newsletterTitle.innerText = "Newsletter";
+    const newsletterBtn = document.querySelector("#newsletterBtn");
+    if (newsletterBtn) newsletterBtn.innerText = isENG ? "Subscribe to Newsletter" : "Prijavi se na newsletter";
+
+    const colorLabel = document.querySelector("label[for='colorPicker']");
+    if (colorLabel) colorLabel.innerText = isENG ? "Choose background color:" : "Odaberite boju pozadine:";
+
+    const deliverySection = document.querySelector("#delivery .section-title");
+    if (deliverySection) deliverySection.innerText = isENG ? "Choose delivery date" : "Odaberite datum isporuke";
+
+    const proizvodiNaslov = document.querySelector("#proizvodi .section-title");
+    if (proizvodiNaslov) proizvodiNaslov.innerText = isENG ? "Our Products" : "Naši proizvodi";
+
+    const proizvodi = document.querySelectorAll(".product");
+    proizvodi.forEach((el, i) => {
+      const naziv = ["Poster A", "Poster B", "Poster C"];
+      const opisi = isENG
+        ? ["Caricature poster", "Family tree poster", "Star map poster"]
+        : ["Poster karikature", "Poster obiteljskog stabla", "Poster zvjezdane mape"];
+      el.querySelector("h3").innerText = naziv[i];
+      el.querySelectorAll("p")[0].innerText = opisi[i];
+      el.querySelector("button").innerText = isENG ? "Add to Cart" : "Dodaj u košaricu";
       });
+        
+      const oilEffectLabel = document.querySelector("#uljeEfekt")?.parentElement;
+      if (oilEffectLabel) {
+         oilEffectLabel.innerHTML =
+            '<input type="checkbox" id="uljeEfekt">' +
+            (isENG ? "I want the oil effect on canvas (+5 €)" : "Želim efekt ulja na platnu (+5 €)");
+        }
 
+
+
+      const couponInput = document.getElementById("couponInput");
+      if (couponInput) {
+        couponInput.placeholder = isENG
+            ? "Enter coupon"
+            : "Unesite kupon";
+      }
+
+        const couponButton = document.getElementById("applyCouponBtn");
+        if (couponButton) {
+        couponButton.innerText = isENG ? "Apply coupon" : "Iskoristi kupon";
+        }
+
+        const footerText = document.querySelector("footer p");
+        if (footerText) footerText.innerText = isENG ? "Follow us:" : "Pratite nas:";
+        
+
+    // ==================== KOŠARICA.html ====================
+    const ime = document.querySelector("input[name='ime']");
+    const email = document.querySelector("input[name='email']");
+    const adresa = document.querySelector("input[name='adresa']");
+    const grad = document.querySelector("input[name='grad']");
+    const posta = document.querySelector("input[name='posta']");
+    const buyBtn = document.getElementById("buyButton");
+
+    if (ime) ime.placeholder = isENG ? "Full Name" : "Ime i prezime";
+    if (email) email.placeholder = isENG ? "Email Address" : "Email adresa";
+    if (adresa) adresa.placeholder = isENG ? "Address" : "Adresa";
+    if (grad) grad.placeholder = isENG ? "City" : "Grad";
+    if (posta) posta.placeholder = isENG ? "Postal Code" : "Poštanski broj";
+    if (buyBtn) buyBtn.innerText = isENG ? "Buy" : "Kupi";
+      
       document.querySelector("footer p").innerText = isENG ? "Follow us:" : "Pratite nas:";
-    });
-  }
+    }); 
+    }
 
-  if (deliveryDate && deliveryInfo) {
+    if (deliveryDate && deliveryInfo) {
     deliveryDate.addEventListener("change", () => {
       const selectedDate = new Date(deliveryDate.value);
       const today = new Date();
