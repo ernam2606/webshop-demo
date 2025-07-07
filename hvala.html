@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hvala na kupnji</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button id="langBtn">ENG</button>
+
+  <h1 id="naslov" class="glavni-naslov thank-you-title">Hvala na vašoj kupnji! 🎉</h1>
+  <div class="cart-box">
+    <p class="thank-you-text">Uskoro ćete primiti potvrdu i račun putem e-maila.</p>
+    <a href="index.html" class="btn-primary">Povratak u trgovinu</a>
+  </div>
+
+  <script>
+    const lastPurchase = JSON.parse(localStorage.getItem("lastPurchase"));
+    console.log("Kupljeno:", lastPurchase);
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

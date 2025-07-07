@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Webshop</title>
+  <link rel="stylesheet" href="style.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+    (function () {
+        emailjs.init("sgH_wGapGLRAusYRL");
+    })();
+    </script>
+</head>
+
+<body>
+
+  <h1 class="glavni-naslov">Demo Webshop</h1>
+
+  <div class="container">
+    <header>
+      <h1 id="naslov">Dobrodošli u Demo Shop</h1>
+      <button id="langBtn">ENG</button>
+      <div class="cart-icon-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/107/107831.png" alt="Cart" id="cartIcon">
+        <span id="cartCount">0</span>
+      </div>
+    </header>
+
+    <section id="newsletter">
+      <h2 class="section-title">Newsletter</h2>
+      <button id="newsletterBtn" class="btn-primary">Prijavi se na newsletter</button>
+    </section>
+
+    <div id="newsletterModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal">&times;</span>
+        <h2>Prijava na newsletter</h2>
+        <input type="email" id="emailInput" placeholder="Unesite email" />
+        <button id="submitEmail" class="btn-primary">Pošalji</button>
+        <p id="responseMsg"></p>
+      </div>
+    </div>
+
+    <hr />
+
+    <section id="color-section">
+      <h2 class="section-title">Prilagodite svoju sliku</h2>
+      <input type="file" id="imageUpload" accept="image/*" />
+      <label for="colorPicker">Odaberite boju pozadine:</label>
+      <input type="color" id="colorPicker" value="#ffffff" />
+      <div id="previewArea">
+        <img id="previewImage" src="" alt="Preview slike" style="display:none;" />
+      </div>
+    </section>
+
+    <hr />
+
+    <section id="delivery">
+      <h2 class="section-title">Odaberite datum isporuke</h2>
+      <input type="date" id="deliveryDate" />
+      <p id="deliveryInfo"></p>
+    </section>
+
+    <hr />
+      
+    <section id="proizvodi">
+      <h2 class="section-title">Naši proizvodi</h2>
+      <div class="products">
+        <div class="product">
+          <img src="PosterA.jfif" alt="Poster A" class="poster-slika">
+          <h3>Poster A</h3>
+          <p>Poster karikature</p>
+          <p>10 eur</p>
+          <button class="add-to-cart" data-product="Poster A">Dodaj u košaricu</button>
+        </div>
+        <div class="product">
+          <img src="PosterB.webp" alt="Poster B" class="poster-slika">
+          <h3>Poster B</h3>
+          <p>Poster obiteljskog stabla</p>
+          <p>10 eur</p>
+          <button class="add-to-cart" data-product="Poster B">Dodaj u košaricu</button>
+        </div>
+        <div class="product">
+          <img src="PosterC.webp" alt="Poster C" class="poster-slika">
+          <h3>Poster C</h3>
+          <p>Poster zvjezdane mape</p>
+          <p>10 eur</p>
+          <button class="add-to-cart" data-product="Poster C">Dodaj u košaricu</button>
+        </div>
+      </div>
+    </section>
+
+    <hr />
+      
+    <footer>
+      <p>Pratite nas:</p>
+      <div class="social-icons">
+        <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+          <img src="fb.png" alt="Facebook ikona" />
+        </a>
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+          <img src="insta.webp" alt="Instagram ikona" />
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <div id="newsletterPopup" class="modal">
+    <div class="modal-content">
+      <span id="closePopupModal">&times;</span>
+      <h2>Pretplati se na newsletter</h2>
+      <input type="email" id="popupEmailInput" placeholder="Unesite email" />
+      <button id="popupSubmitEmail" class="btn-primary">Pošalji</button>
+      <p id="popupResponseMsg"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+ </body>
+</html>

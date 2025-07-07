@@ -1,0 +1,553 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #eaf6ff, #d0e3ff);
+  color: #1e2a78;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.glavni-naslov {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #103f91;
+  text-align: center;
+  margin: 20px auto 35px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  background-color: #fff;
+  max-width: 760px;
+  width: 100%;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(30, 60, 120, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+section {
+  background-color: #f9fbff;
+  padding: 30px;
+  border-radius: 14px;
+  border: 1px solid #d4e0ff;
+  box-shadow: 0 6px 14px rgba(30, 60, 110, 0.07);
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: #1a3a8c;
+  margin-bottom: 22px;
+  position: relative;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #3a63c9;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(58, 99, 201, 0.4);
+  transition: all 0.25s ease;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #274ba0;
+}
+
+input[type="email"],
+input[type="date"],
+input[type="color"],
+input[type="file"] {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 2px solid #a8bbf6;
+  background-color: #f7faff;
+  margin-top: 10px;
+}
+
+input[type="file"] {
+  border-style: dashed;
+  background-color: #f0f6ff;
+  text-align: left;
+}
+
+input[type="file"]::file-selector-button {
+  padding: 8px 16px;
+  background-color: #4a76f9;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#previewArea {
+  margin-top: 20px;
+  padding: 22px;
+  border-radius: 14px;
+  background-color: #ffffff;
+  border: 2px dashed #4a76f9;
+  min-height: 220px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#previewImage {
+  display: block;
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0 10px;
+  font-weight: 600;
+  color: #445577;
+}
+
+.social-icons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+}
+
+.social-icons a img {
+  width: 38px;
+  height: 38px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 50, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 460px;
+  width: 90%;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
+  position: relative;
+  text-align: center;
+}
+
+#closeModal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+#langBtn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-color: #f0f4ff;
+  color: #1a3a8c;
+  border: 2px solid #4a76f9;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.cart-icon-container {
+  position: relative;
+  margin-left: auto;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.cart-icon-container img {
+  width: 32px;
+  height: 32px;
+}
+
+#cartCount {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+}
+
+/* PROIZVODI */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  padding: 30px 0;
+  width: 100%;
+}
+
+.product {
+  background-color: #ffffff;
+  border: 1px solid #dbe6ff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(30, 60, 90, 0.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.product:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(30, 60, 90, 0.15);
+}
+
+.poster-slika {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.product h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1a3a8c;
+}
+
+.product p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.add-to-cart{
+  background-color: #3a63c9;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(58, 99, 201, 0.4);
+  transition: all 0.25s ease;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.cart-title {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 2rem;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.cart-box {
+  background: #f9fbff;
+  border: 1px solid #dbe3f5;
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #dbe6ff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  gap: 12px;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cart-thumb:hover {
+  transform: scale(3.2);
+  z-index: 5;
+  position: relative;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+
+.remove-item {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.3s ease;
+}
+
+.remove-item:hover {
+  background: #c9302c;
+}
+
+.total-price {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.buy-btn {
+  margin-top: 25px;
+  display: block;
+  margin-left: auto;
+  padding: 12px 30px;
+  background-color: #3a63c9;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(58, 99, 201, 0.4);
+}
+
+.thank-you-title {
+  margin-bottom: 40px;
+}
+
+.thank-you-text {
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#orderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+  padding: 25px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#orderForm input {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#orderForm input:focus {
+  border-color: #6e48aa;
+  outline: none;
+}
+
+#orderForm button.buy-btn {
+  background-color: #6e48aa;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+#orderForm button.buy-btn:hover:enabled {
+  background-color: #563d85;
+}
+
+#orderForm button.buy-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.coupon-section {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+#couponInput {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 150px;
+}
+
+#applyCouponBtn {
+  padding: 12px 20px;
+  background-color: #6e48aa;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#applyCouponBtn:hover {
+  background-color: #563d85;
+}
+
+#couponMessage {
+  font-size: 14px;
+  margin-top: 5px;
+  color: green;
+  width: 100%;
+}
+
+#responseMsg {
+  font-size: 1rem;
+  margin-top: 10px;
+  font-weight: bold;
+  display: none;
+}
+
+#popupResponseMsg {
+  font-size: 14px;
+  margin: 5px 0 10px;
+  color: #28a745; /* ili crveno za error */
+  text-align: center;
+  display: none; /* ovo možeš kontrolirati iz JS-a */
+}
+
+
+
+/* ============================= */
+/*        RESPONSIVNOST         */
+/* ============================= */
+
+@media (max-width: 768px) {
+  .glavni-naslov {
+    font-size: 2.3rem;
+    margin-bottom: 25px;
+  }
+
+  .container {
+    padding: 30px 20px;
+    gap: 35px;
+  }
+
+  .modal-content {
+    padding: 25px;
+  }
+
+  .btn-primary {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+
+  #langBtn {
+    top: 10px;
+    right: 15px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  input[type="email"],
+  input[type="date"],
+  input[type="color"],
+  input[type="file"] {
+    max-width: 100%;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  #previewImage {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .glavni-naslov {
+    font-size: 1.9rem;
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  #previewImage {
+    max-height: 200px;
+  }
+}
