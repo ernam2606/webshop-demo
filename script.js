@@ -288,11 +288,20 @@ const previewCtx = previewCanvas?.getContext("2d");
 let cropper = null;
 let originalImg = null;
 
+const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp", "image/jfif"];
+
 // ========== UPLOAD SLIKE ==========
 if (imageUpload && previewImage && previewCanvas && previewCtx) {
   imageUpload.addEventListener("change", () => {
     const file = imageUpload.files[0];
     if (file) {
+    
+      if (!allowedTypes.includes(file.type)) {
+        alert("Format slike nije podržan. Dozvoljeni su: JPG, PNG, WEBP, JFIF.");
+        imageUpload.value = ""; // reset input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = function (e) {
         originalImg = new Image();
