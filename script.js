@@ -274,25 +274,188 @@ if (popupSubmitBtn) {
     if (e.target === popupModal) popupModal.style.display = "none";
   };
 
-// ========== COLOR PICKER + PREVIEW ==========
-  const imageUpload = document.getElementById("imageUpload");
-  const colorPicker = document.getElementById("colorPicker");
-  const previewImage = document.getElementById("previewImage");
-  const previewArea = document.getElementById("previewArea");
+// ========== CROP EDITOR + COLOR + TRANSPARENT WHITE ==========
+const imageUpload = document.getElementById("imageUpload");
+const previewImage = document.getElementById("previewImage");
+const previewArea = document.getElementById("previewArea");
+const cropBtn = document.getElementById("cropBtn");
+const editBtn = document.getElementById("editBtn");
+const outputCanvas = document.getElementById("croppedCanvas");
+const colorPicker = document.getElementById("colorPicker");
+const previewCanvas = document.getElementById("previewCanvas");
+const previewCtx = previewCanvas?.getContext("2d");
 
-  if (imageUpload && colorPicker && previewImage && previewArea) {
-    imageUpload.addEventListener("change", () => {
-      const file = imageUpload.files[0];
-      if (file) {
-        previewImage.src = URL.createObjectURL(file);
-        previewImage.style.display = "block";
+let cropper = null;
+let originalImg = null;
+
+// ========== UPLOAD SLIKE ==========
+if (imageUpload && previewImage && previewCanvas && previewCtx) {
+  imageUpload.addEventListener("change", () => {
+    const file = imageUpload.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        originalImg = new Image();
+        originalImg.onload = function () {
+          previewCanvas.width = originalImg.width;
+          previewCanvas.height = originalImg.height;
+          previewCtx.drawImage(originalImg, 0, 0);
+          previewCanvas.style.display = "block";
+          previewImage.style.display = "none";
+        };
+        originalImg.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      previewImage.src = URL.createObjectURL(file);
+      previewImage.style.display = "block";
+      outputCanvas.style.display = "none";
+      editBtn.style.display = "inline-block";
+      cropBtn.style.display = "none";
+
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
       }
-    });
+    }
+  });
+}
 
-    colorPicker.addEventListener("input", () => {
-      previewArea.style.backgroundColor = colorPicker.value;
-    });
+// ========== UREDI SLIKU (POKRENI CROPPER) ==========
+editBtn.addEventListener("click", () => {
+  if (cropper) cropper.destroy();
+
+  previewCanvas.style.display = "none";
+  previewImage.style.display = "block";
+
+  cropper = new Cropper(previewImage, {
+    aspectRatio: 1,
+    viewMode: 1,
+    movable: true,
+    zoomable: true,
+  });
+
+  cropBtn.style.display = "inline-block";
+  editBtn.style.display = "none";
+});
+
+// ========== IZREŽI SLIKU ==========
+cropBtn.addEventListener("click", () => {
+  if (!cropper) return;
+
+  const croppedCanvas = cropper.getCroppedCanvas({
+    width: 400,
+    height: 400,
+    imageSmoothingQuality: "high",
+  });
+
+  if (!croppedCanvas) return;
+
+  const ctx = outputCanvas.getContext("2d");
+  outputCanvas.width = croppedCanvas.width;
+  outputCanvas.height = croppedCanvas.height;
+
+  // Prvo nacrtaj izrezanu sliku
+  ctx.drawImage(croppedCanvas, 0, 0);
+
+  // Ako je korisnik već odabrao boju pozadine, zamijeni bijelu s njom
+  if (colorPicker && colorPicker.value) {
+    const imageData = ctx.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
+    const data = imageData.data;
+    const [rNew, gNew, bNew] = hexToRgb(colorPicker.value);
+    const tolerance = 40;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const isWhite =
+        Math.abs(r - 255) < tolerance &&
+        Math.abs(g - 255) < tolerance &&
+        Math.abs(b - 255) < tolerance;
+
+      if (isWhite) {
+        data[i] = rNew;
+        data[i + 1] = gNew;
+        data[i + 2] = bNew;
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
   }
+
+  // Prikaži izrezanu sliku
+  outputCanvas.style.display = "block";
+
+  // Sakrij višak
+  cropper.destroy();
+  cropper = null;
+  previewImage.style.display = "none";
+  previewCanvas.style.display = "none";
+  cropBtn.style.display = "none";
+  editBtn.style.display = "inline-block";
+});
+
+// ========== COLOR PICKER → BIJELA U NOVU BOJU ==========
+colorPicker?.addEventListener("input", () => {
+  if (!previewImage.complete || previewImage.naturalWidth === 0) return;
+
+  previewCanvas.width = previewImage.naturalWidth;
+  previewCanvas.height = previewImage.naturalHeight;
+  previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  previewCtx.drawImage(previewImage, 0, 0);
+
+  const imageData = previewCtx.getImageData(0, 0, previewCanvas.width, previewCanvas.height);
+  const data = imageData.data;
+
+  const [rNew, gNew, bNew] = hexToRgb(colorPicker.value);
+  const tolerance = 40;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    const isWhite =
+      Math.abs(r - 255) < tolerance &&
+      Math.abs(g - 255) < tolerance &&
+      Math.abs(b - 255) < tolerance;
+
+    if (isWhite) {
+      data[i] = rNew;
+      data[i + 1] = gNew;
+      data[i + 2] = bNew;
+    }
+  }
+
+  previewCtx.putImageData(imageData, 0, 0);
+  previewImage.style.display = "none";
+  previewCanvas.style.display = "block";
+});
+
+// ========== HEX → RGB HELPER ==========
+function hexToRgb(hex) {
+  hex = hex.replace("#", "");
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return [r, g, b];
+}
+
+
+// ========== HELPER: HEX → RGB ==========
+
+function hexToRgb(hex) {
+  hex = hex.replace("#", "");
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return [r, g, b];
+}
+
+
 
   // Delivery info
   const deliveryDate = document.getElementById("deliveryDate");
